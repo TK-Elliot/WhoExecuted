@@ -1,0 +1,14 @@
+[+]Got trapped
+
+username: msedgewin10\ieuser
+
+Windows IP Configuration
+Ethernet adapter Ethernet:
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::c50d:519f:96a4:e108%8
+   IPv4 Address. . . . . . . . . . . : 10.0.2.5
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 10.0.2.1
+
+--------------------------------
